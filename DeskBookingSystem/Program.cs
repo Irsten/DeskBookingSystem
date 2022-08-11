@@ -1,15 +1,16 @@
 using DeskBookingSystem;
 using DeskBookingSystem.Entities;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-
+builder.Services.AddControllers();
 builder.Services.AddDbContext<DeskBookingDbContext>();
 builder.Services.AddScoped<LocationSeeder>();
-
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
@@ -32,6 +33,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapRazorPages();
 
