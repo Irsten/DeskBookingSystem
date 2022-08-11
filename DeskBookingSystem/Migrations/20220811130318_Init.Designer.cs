@@ -4,16 +4,18 @@ using DeskBookingSystem.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace DeskBookingSystem.Migrations
 {
-    [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DeskBookingDbContext))]
+    [Migration("20220811130318_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,12 +38,12 @@ namespace DeskBookingSystem.Migrations
                     b.Property<DateTime>("BookingStartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EmployeeId")
+                    b.Property<int>("DeskId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId")
+                    b.HasIndex("DeskId")
                         .IsUnique();
 
                     b.ToTable("Bookings");
@@ -55,9 +57,6 @@ namespace DeskBookingSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("BookingId")
-                        .HasColumnType("int");
-
                     b.Property<int>("DeskNumber")
                         .HasColumnType("int");
 
@@ -68,10 +67,6 @@ namespace DeskBookingSystem.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookingId")
-                        .IsUnique()
-                        .HasFilter("[BookingId] IS NOT NULL");
 
                     b.HasIndex("LocationId");
 
@@ -86,6 +81,9 @@ namespace DeskBookingSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -95,6 +93,9 @@ namespace DeskBookingSystem.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });
@@ -119,42 +120,46 @@ namespace DeskBookingSystem.Migrations
 
             modelBuilder.Entity("DeskBookingSystem.Entities.Booking", b =>
                 {
-                    b.HasOne("DeskBookingSystem.Entities.Employee", "Employee")
+                    b.HasOne("DeskBookingSystem.Entities.Desk", "Desk")
                         .WithOne("Booking")
-                        .HasForeignKey("DeskBookingSystem.Entities.Booking", "EmployeeId")
+                        .HasForeignKey("DeskBookingSystem.Entities.Booking", "DeskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Employee");
+                    b.Navigation("Desk");
                 });
 
             modelBuilder.Entity("DeskBookingSystem.Entities.Desk", b =>
                 {
-                    b.HasOne("DeskBookingSystem.Entities.Booking", "Booking")
-                        .WithOne("Desk")
-                        .HasForeignKey("DeskBookingSystem.Entities.Desk", "BookingId");
-
                     b.HasOne("DeskBookingSystem.Entities.Location", "Location")
                         .WithMany("Desks")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Booking");
-
                     b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("DeskBookingSystem.Entities.Booking", b =>
-                {
-                    b.Navigation("Desk")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DeskBookingSystem.Entities.Employee", b =>
                 {
-                    b.Navigation("Booking")
+                    b.HasOne("DeskBookingSystem.Entities.Booking", "Booking")
+                        .WithOne("Employee")
+                        .HasForeignKey("DeskBookingSystem.Entities.Employee", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("DeskBookingSystem.Entities.Booking", b =>
+                {
+                    b.Navigation("Employee")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DeskBookingSystem.Entities.Desk", b =>
+                {
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("DeskBookingSystem.Entities.Location", b =>

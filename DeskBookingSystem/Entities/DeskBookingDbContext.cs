@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DeskBookingSystem.Entities
 {
-    public class BookingDbContext : DbContext
+    public class DeskBookingDbContext : DbContext
     {
         private string _connectionString = "Server=RADEK;Database=DeskBookingDb;Trusted_Connection=True;";
         public DbSet<Location> Locations { get; set; }
