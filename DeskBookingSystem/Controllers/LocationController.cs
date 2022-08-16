@@ -17,14 +17,24 @@ namespace DeskBookingSystem.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        public ActionResult CreateLocation([FromBody] CreateLocationDto dto)
+        [HttpPost("{employeeId}")]
+        public ActionResult CreateLocation([FromRoute] int employeeId, [FromBody] CreateLocationDto dto)
         {
-            var location = _mapper.Map<Location>(dto);
-            _dbContext.Locations.Add(location);
-            _dbContext.SaveChanges();
+            Employee employee = _dbContext.Employees.FirstOrDefault(e => e.Id == employeeId);
 
-            return Created($"api/location/{location.Id}", null);
+            if (employee != null)
+            {
+                if (employee.Role == Entities.Role.Administrator)
+                {
+                    var location = _mapper.Map<Location>(dto);
+                    _dbContext.Locations.Add(location);
+                    _dbContext.SaveChanges();
+
+                    return Created($"api/location/{location.Id}", null);
+                }
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet]

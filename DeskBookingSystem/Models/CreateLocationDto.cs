@@ -1,4 +1,6 @@
-﻿namespace DeskBookingSystem.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DeskBookingSystem.Models
 {
     public class CreateLocationDto
     {
