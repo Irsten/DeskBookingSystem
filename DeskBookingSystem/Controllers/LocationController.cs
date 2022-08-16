@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DeskBookingSystem.Entities;
 using DeskBookingSystem.Models;
+using DeskBookingSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,11 +11,11 @@ namespace DeskBookingSystem.Controllers
     public class LocationController : ControllerBase
     {
         private readonly DeskBookingDbContext _dbContext;
-        private readonly IMapper _mapper;
-        public LocationController(DeskBookingDbContext dbContext, IMapper mapper)
+        private readonly ILocationService _locationService;
+        public LocationController(DeskBookingDbContext dbContext, ILocationService locationService)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
+            _locationService = locationService;
         }
 
         [HttpPost("{employeeId}")]
@@ -26,11 +27,9 @@ namespace DeskBookingSystem.Controllers
             {
                 if (employee.Role == Entities.Role.Administrator)
                 {
-                    var location = _mapper.Map<Location>(dto);
-                    _dbContext.Locations.Add(location);
-                    _dbContext.SaveChanges();
+                    var id = _locationService.Create(dto);
 
-                    return Created($"api/location/{location.Id}", null);
+                    return Created($"api/location/{id}", null);
                 }
             }
 
@@ -40,31 +39,22 @@ namespace DeskBookingSystem.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<LocationDto>> GetAll()
         {
-            var locations = _dbContext
-                .Locations
-                .Include(l => l.Desks)
-                .ToList();
-
-            var locationsDtos = _mapper.Map<List<LocationDto>>(locations);
+            var locationsDtos = _locationService.GetAll();
 
             return Ok(locationsDtos);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<LocationDto> Get([FromRoute] int id)
+        public ActionResult<LocationDto> GetById([FromRoute] int id)
         {
-            var location = _dbContext
-                .Locations
-                .Include(l => l.Desks)
-                .FirstOrDefault(r => r.Id == id);
+            var location = _locationService.GetById(id);
 
             if (location is null)
             {
                 return NotFound();
             }
 
-            var locationDto = _mapper.Map<LocationDto>(location);
-            return Ok(locationDto);
+            return Ok(location);
         }
     }
 }
