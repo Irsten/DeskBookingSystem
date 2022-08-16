@@ -17,6 +17,16 @@ namespace DeskBookingSystem.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost]
+        public ActionResult CreateLocation([FromBody] CreateLocationDto dto)
+        {
+            var location = _mapper.Map<Location>(dto);
+            _dbContext.Locations.Add(location);
+            _dbContext.SaveChanges();
+
+            return Created($"api/location/{location.Id}", null);
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<LocationDto>> GetAll()
         {
