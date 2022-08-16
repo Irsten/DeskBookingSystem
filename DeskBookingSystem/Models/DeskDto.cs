@@ -1,4 +1,6 @@
-﻿namespace DeskBookingSystem.Models
+﻿using DeskBookingSystem.Entities;
+
+namespace DeskBookingSystem.Models
 {
     public enum State
     {

@@ -9,7 +9,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DeskBookingDbContext>();
-builder.Services.AddScoped<LocationSeeder>();
+builder.Services.AddScoped<DataSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
@@ -23,7 +23,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 var scope = app.Services.CreateScope();
-var seeder = scope.ServiceProvider.GetRequiredService<LocationSeeder>();
+var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
 
 seeder.Seed();
 

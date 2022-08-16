@@ -4,12 +4,14 @@ using DeskBookingSystem.Models;
 
 namespace DeskBookingSystem
 {
-    public class LocationMappingProfile : Profile
+    public class DataMappingProfile : Profile
     {
-        public LocationMappingProfile()
+        public DataMappingProfile()
         {
             CreateMap<Location, LocationDto>();
             CreateMap<Desk, DeskDto>();
+            CreateMap<Booking, BookingDto>();
+            CreateMap<Employee, EmployeeDto>();
         }
     }
 }
