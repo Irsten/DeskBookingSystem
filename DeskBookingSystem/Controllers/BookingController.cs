@@ -24,11 +24,31 @@ namespace DeskBookingSystem.Controllers
             var bookings = _dbContext
                 .Bookings
                 .Include(b => b.Desk)
-                .Include(b => b.Employee);
+                .Include(b => b.Employee)
+                .ToList();
 
             var bookingsDto = _mapper.Map<List<BookingDto>>(bookings);
 
             return Ok(bookingsDto);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<BookingDto> Get([FromRoute] int id)
+        {
+            var booking = _dbContext
+                .Bookings
+                .Include(b => b.Desk)
+                .Include(b => b.Employee)
+                .FirstOrDefault(r => r.Id == id); ;
+
+            if (booking is null)
+            {
+                return NotFound();
+            }
+
+            var bookingDto = _mapper.Map<BookingDto>(booking);
+
+            return Ok(bookingDto);
         }
     }
 }
