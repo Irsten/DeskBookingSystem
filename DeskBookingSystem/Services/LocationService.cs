@@ -49,5 +49,18 @@ namespace DeskBookingSystem.Services
 
                     return location.Id;
         }
+        public bool Delete(int id)
+        {
+            var location = _dbContext
+                .Locations
+                .FirstOrDefault(r => r.Id == id);
+
+            if (location == null) return false;
+
+            _dbContext.Locations.Remove(location);
+            _dbContext.SaveChanges();
+
+            return true;
+        }
     }
 }

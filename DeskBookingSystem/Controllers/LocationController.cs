@@ -19,7 +19,7 @@ namespace DeskBookingSystem.Controllers
         }
 
         [HttpPost("{employeeId}")]
-        public ActionResult CreateLocation([FromRoute] int employeeId, [FromBody] CreateLocationDto dto)
+        public ActionResult Create([FromRoute] int employeeId, [FromBody] CreateLocationDto dto)
         {
             Employee employee = _dbContext.Employees.FirstOrDefault(e => e.Id == employeeId);
 
@@ -31,9 +31,35 @@ namespace DeskBookingSystem.Controllers
 
                     return Created($"api/location/{id}", null);
                 }
+                return Unauthorized();
             }
+            return NotFound();
+        }
 
-            return Unauthorized();
+        [HttpDelete("{employeeId}/{locationId}")]
+        public ActionResult Delete([FromRoute] int employeeId, [FromRoute] int locationId)
+        {
+            Employee employee = _dbContext.Employees.FirstOrDefault(e => e.Id == employeeId);
+            Location location = _dbContext.Locations.FirstOrDefault(l => l.Id == locationId);
+
+            if (employee != null)
+            {
+                if (employee.Role == Entities.Role.Administrator)
+                {
+                    if (location.Desks == null)
+                    {
+                        var isDeleted = _locationService.Delete(locationId);
+                        if (isDeleted)
+                        {
+                            return NoContent(); 
+                        }
+                        return NotFound();
+                    }
+                    return BadRequest();
+                }
+                return Unauthorized();
+            }
+            return NotFound();
         }
 
         [HttpGet]
