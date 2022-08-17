@@ -14,7 +14,7 @@ namespace DeskBookingSystem.Controllers
             _bookingService = bookingService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public ActionResult<IEnumerable<BookingDto>> GetAll()
         {
             var bookings = _bookingService.GetAll();
@@ -22,7 +22,7 @@ namespace DeskBookingSystem.Controllers
             return Ok(bookings);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public ActionResult<BookingDto> GetById([FromRoute] int id)
         {
             var booking = _bookingService.GetById(id);
@@ -34,7 +34,7 @@ namespace DeskBookingSystem.Controllers
             return Ok(booking);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public ActionResult Create([FromBody] CreateBookingDto dto)
         {
             var isCreated = _bookingService.Create(dto);
@@ -42,7 +42,7 @@ namespace DeskBookingSystem.Controllers
 
             return Ok();
         }
-        [HttpPut("{employeeId}/{currentDeskId}")]
+        [HttpPut("Change/{employeeId}/{currentDeskId}")]
         public ActionResult Change([FromRoute] int employeeId, [FromRoute] int currentDeskId, [FromBody] CreateBookingDto dto)
         {
             var isChanged = _bookingService.Change(employeeId, currentDeskId, dto);

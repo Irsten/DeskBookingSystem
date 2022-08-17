@@ -13,19 +13,7 @@ namespace DeskBookingSystem.Controllers
             _deskService = deskService;
         }
 
-        [HttpPut("{employeeId}/{deskId}")]
-        public ActionResult Update([FromRoute] int employeeId, [FromRoute] int deskId, [FromBody] UpdateDeskDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var isUpdated = _deskService.Update(employeeId, deskId, dto);
-            if (!isUpdated) return NotFound();
-            return Ok();
-        }
-
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public ActionResult<DeskDto> GetById([FromRoute] int id)
         {
             var desk = _deskService.GetById(id);
@@ -38,7 +26,7 @@ namespace DeskBookingSystem.Controllers
             return Ok(desk);
         }
 
-        [HttpPost("{employeeId}")]
+        [HttpPost("Create/{employeeId}")]
         public ActionResult Create([FromRoute] int employeeId, [FromBody] CreateDeskDto dto)
         {
             if (!ModelState.IsValid)
@@ -51,12 +39,24 @@ namespace DeskBookingSystem.Controllers
             return Ok();
         }
 
-        [HttpDelete("{employeeId}/{deskId}")]
+        [HttpDelete("Delete/{employeeId}/{deskId}")]
         public ActionResult Delete([FromRoute] int employeeId, [FromRoute] int deskId)
         {
             var isDeleted = _deskService.Delete(employeeId, deskId);
             if (!isDeleted) return NotFound();
             return NoContent();
+        }
+
+        [HttpPut("Update/{employeeId}/{deskId}")]
+        public ActionResult Update([FromRoute] int employeeId, [FromRoute] int deskId, [FromBody] UpdateDeskDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var isUpdated = _deskService.Update(employeeId, deskId, dto);
+            if (!isUpdated) return NotFound();
+            return Ok();
         }
     }
 }
