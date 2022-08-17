@@ -7,6 +7,6 @@ namespace DeskBookingSystem.Models
         public int Id { get; set; }
         public int DeskNumber { get; set; }
         public State? State { get; set; }
-        public BookingDto? Booking { get; set; }
+        public DeskBookingDto? Booking { get; set; }
     }
 }

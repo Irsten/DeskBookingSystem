@@ -12,6 +12,7 @@ namespace DeskBookingSystem
             CreateMap<Desk, DeskDto>();
             CreateMap<Desk, BookingDeskDto>();
             CreateMap<Booking, BookingDto>();
+            CreateMap<Booking, DeskBookingDto>();
             CreateMap<Employee, EmployeeDto>();
 
             CreateMap<CreateLocationDto, Location>();

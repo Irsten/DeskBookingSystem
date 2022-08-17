@@ -53,7 +53,7 @@ namespace DeskBookingSystem.Services
             if (desk == null) return false;
             if (desk.State.Equals(State.Unavailable)) return false;
             if (dto.BookingEndDate < dto.BookingStartDate) return false;
-            if (dto.BookingEndDate == null || dto.BookingEndDate == dto.BookingStartDate)
+            if (dto.BookingEndDate == dto.BookingStartDate)
             {
                 days = 1;
             }
