@@ -7,6 +7,6 @@ namespace DeskBookingSystem.Models
         public DateTime BookingStartDate { get; set; }
         public DateTime BookingEndDate { get; set; }
         public int DeskId { get; set; }
-        public Employee Employee { get; set; }
+        public EmployeeDto Employee { get; set; }
     }
 }
