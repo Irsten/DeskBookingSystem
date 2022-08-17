@@ -4,9 +4,9 @@ namespace DeskBookingSystem.Services
 {
     public interface ILocationService
     {
-        int Create(CreateLocationDto dto);
-        bool Delete(int id);
+        bool Create(int employeeId, CreateLocationDto dto);
+        bool Delete(int employeeId, int locationId);
         IEnumerable<LocationDto> GetAll();
-        LocationDto GetById(int id);
+        LocationDto GetById(int locationId);
     }
 }

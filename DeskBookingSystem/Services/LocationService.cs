@@ -16,12 +16,12 @@ namespace DeskBookingSystem.Services
             _mapper = mapper;
         }
 
-        public LocationDto GetById(int id)
+        public LocationDto GetById(int locationId)
         {
             var location = _dbContext
                 .Locations
                 .Include(l => l.Desks)
-                .FirstOrDefault(r => r.Id == id);
+                .FirstOrDefault(r => r.Id == locationId);
 
             if (location == null) return null;
 
@@ -41,21 +41,36 @@ namespace DeskBookingSystem.Services
             return locationsDtos;
         }
 
-        public int Create(CreateLocationDto dto)
+        public bool Create(int employeeId, CreateLocationDto dto)
         {
-                    var location = _mapper.Map<Location>(dto);
-                    _dbContext.Locations.Add(location);
-                    _dbContext.SaveChanges();
+            var employee = _dbContext
+                .Employees
+                .FirstOrDefault(r => r.Id == employeeId);
 
-                    return location.Id;
+            if (employee == null) return false;
+            if (!employee.Role.Equals(Role.Administrator)) return false;
+            if (dto == null) return false;
+
+            var location = _mapper.Map<Location>(dto);
+            _dbContext.Locations.Add(location);
+            _dbContext.SaveChanges();
+
+            return true;
         }
-        public bool Delete(int id)
+        public bool Delete(int employeeId, int locationId)
         {
+            var employee = _dbContext
+                .Employees
+                .FirstOrDefault(r => r.Id == employeeId);
+
             var location = _dbContext
                 .Locations
-                .FirstOrDefault(r => r.Id == id);
+                .FirstOrDefault(r => r.Id == locationId);
 
+            if (employee == null) return false;
+            if (!employee.Role.Equals(Role.Administrator)) return false;
             if (location == null) return false;
+            if (location.Desks != null) return false;
 
             _dbContext.Locations.Remove(location);
             _dbContext.SaveChanges();

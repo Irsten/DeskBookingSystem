@@ -1,11 +1,11 @@
 ﻿using DeskBookingSystem.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace DeskBookingSystem.Models
 {
-    public class DeskDto
+    public class UpdateDeskDto
     {
-        public int Id { get; set; }
-        public int DeskNumber { get; set; }
+        [Required]
         public State State { get; set; }
     }
 }

@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using DeskBookingSystem.Entities;
+﻿using DeskBookingSystem.Entities;
 using DeskBookingSystem.Models;
 using DeskBookingSystem.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace DeskBookingSystem.Controllers
 {
@@ -21,45 +20,19 @@ namespace DeskBookingSystem.Controllers
         [HttpPost("{employeeId}")]
         public ActionResult Create([FromRoute] int employeeId, [FromBody] CreateLocationDto dto)
         {
-            Employee employee = _dbContext.Employees.FirstOrDefault(e => e.Id == employeeId);
+            var isCreated = _locationService.Create(employeeId, dto);
+            if (!isCreated) return NotFound();
 
-            if (employee != null)
-            {
-                if (employee.Role == Entities.Role.Administrator)
-                {
-                    var id = _locationService.Create(dto);
-
-                    return Created($"api/location/{id}", null);
-                }
-                return Unauthorized();
-            }
-            return NotFound();
+            return Ok();
         }
 
         [HttpDelete("{employeeId}/{locationId}")]
         public ActionResult Delete([FromRoute] int employeeId, [FromRoute] int locationId)
         {
-            Employee employee = _dbContext.Employees.FirstOrDefault(e => e.Id == employeeId);
-            Location location = _dbContext.Locations.FirstOrDefault(l => l.Id == locationId);
+            var isDeleted = _locationService.Delete(employeeId, locationId);
+            if (!isDeleted) return NotFound();
 
-            if (employee != null)
-            {
-                if (employee.Role == Entities.Role.Administrator)
-                {
-                    if (location.Desks == null)
-                    {
-                        var isDeleted = _locationService.Delete(locationId);
-                        if (isDeleted)
-                        {
-                            return NoContent(); 
-                        }
-                        return NotFound();
-                    }
-                    return BadRequest();
-                }
-                return Unauthorized();
-            }
-            return NotFound();
+            return NoContent();
         }
 
         [HttpGet]
@@ -74,11 +47,7 @@ namespace DeskBookingSystem.Controllers
         public ActionResult<LocationDto> GetById([FromRoute] int id)
         {
             var location = _locationService.GetById(id);
-
-            if (location is null)
-            {
-                return NotFound();
-            }
+            if (location is null) return NotFound();
 
             return Ok(location);
         }

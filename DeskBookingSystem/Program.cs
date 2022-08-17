@@ -13,6 +13,7 @@ builder.Services.AddDbContext<DeskBookingDbContext>();
 builder.Services.AddScoped<DataSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IDeskService, DeskService>();
 
 var app = builder.Build();
 

@@ -24,13 +24,6 @@ namespace DeskBookingSystem
             }
         }
 
-        /*private IEnumerable<Employee> GetEmployees()
-        {
-            var employees = new List<Employee>();
-
-            return employees;
-        }*/
-
         private IEnumerable<Location> GetLocations()
         {
             var locations = new List<Location>()
