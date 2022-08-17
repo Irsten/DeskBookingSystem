@@ -1,5 +1,4 @@
-﻿using DeskBookingSystem.Entities;
-using DeskBookingSystem.Models;
+﻿using DeskBookingSystem.Models;
 using DeskBookingSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,30 +8,10 @@ namespace DeskBookingSystem.Controllers
     [Route("api/location")]
     public class LocationController : ControllerBase
     {
-        private readonly DeskBookingDbContext _dbContext;
         private readonly ILocationService _locationService;
-        public LocationController(DeskBookingDbContext dbContext, ILocationService locationService)
+        public LocationController(ILocationService locationService)
         {
-            _dbContext = dbContext;
             _locationService = locationService;
-        }
-
-        [HttpPost("{employeeId}")]
-        public ActionResult Create([FromRoute] int employeeId, [FromBody] CreateLocationDto dto)
-        {
-            var isCreated = _locationService.Create(employeeId, dto);
-            if (!isCreated) return NotFound();
-
-            return Ok();
-        }
-
-        [HttpDelete("{employeeId}/{locationId}")]
-        public ActionResult Delete([FromRoute] int employeeId, [FromRoute] int locationId)
-        {
-            var isDeleted = _locationService.Delete(employeeId, locationId);
-            if (!isDeleted) return NotFound();
-
-            return NoContent();
         }
 
         [HttpGet]
@@ -50,6 +29,23 @@ namespace DeskBookingSystem.Controllers
             if (location is null) return NotFound();
 
             return Ok(location);
+        }
+        [HttpPost("{employeeId}")]
+        public ActionResult Create([FromRoute] int employeeId, [FromBody] CreateLocationDto dto)
+        {
+            var isCreated = _locationService.Create(employeeId, dto);
+            if (!isCreated) return NotFound();
+
+            return Ok();
+        }
+
+        [HttpDelete("{employeeId}/{locationId}")]
+        public ActionResult Delete([FromRoute] int employeeId, [FromRoute] int locationId)
+        {
+            var isDeleted = _locationService.Delete(employeeId, locationId);
+            if (!isDeleted) return NotFound();
+
+            return NoContent();
         }
     }
 }

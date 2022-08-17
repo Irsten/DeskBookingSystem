@@ -37,7 +37,6 @@ namespace DeskBookingSystem
                         {
                             DeskNumber = 1,
                             State = State.Unavailable,
-                            LocationId = 1,
                             Booking = new Booking()
                             {
                                 BookingStartDate = new DateTime(2022, 08, 16),

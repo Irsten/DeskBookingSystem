@@ -1,5 +1,4 @@
-﻿using DeskBookingSystem.Entities;
-using DeskBookingSystem.Models;
+﻿using DeskBookingSystem.Models;
 using DeskBookingSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,27 +11,6 @@ namespace DeskBookingSystem.Controllers
         public DeskController(IDeskService deskService)
         {
             _deskService = deskService;
-        }
-
-        [HttpPost("{employeeId}")]
-        public ActionResult Create([FromRoute] int employeeId, [FromBody] CreateDeskDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var isCreated = _deskService.Create(employeeId, dto);
-            if (!isCreated) return NotFound();
-
-            return Ok();
-        }
-
-        [HttpDelete("{employeeId}/{deskId}")]
-        public ActionResult Delete([FromRoute] int employeeId, [FromRoute] int deskId)
-        {
-            var isDeleted = _deskService.Delete(employeeId, deskId);
-            if (!isDeleted) return NotFound();
-            return NoContent();
         }
 
         [HttpPut("{employeeId}/{deskId}")]
@@ -58,6 +36,27 @@ namespace DeskBookingSystem.Controllers
             }
 
             return Ok(desk);
+        }
+
+        [HttpPost("{employeeId}")]
+        public ActionResult Create([FromRoute] int employeeId, [FromBody] CreateDeskDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var isCreated = _deskService.Create(employeeId, dto);
+            if (!isCreated) return NotFound();
+
+            return Ok();
+        }
+
+        [HttpDelete("{employeeId}/{deskId}")]
+        public ActionResult Delete([FromRoute] int employeeId, [FromRoute] int deskId)
+        {
+            var isDeleted = _deskService.Delete(employeeId, deskId);
+            if (!isDeleted) return NotFound();
+            return NoContent();
         }
     }
 }

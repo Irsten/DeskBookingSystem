@@ -1,6 +1,4 @@
-﻿using DeskBookingSystem.Entities;
-
-namespace DeskBookingSystem.Models
+﻿namespace DeskBookingSystem.Models
 {
     public class BookingDto
     {
@@ -8,6 +6,6 @@ namespace DeskBookingSystem.Models
         public DateTime BookingStartDate { get; set; }
         public DateTime BookingEndDate { get; set; }
         public EmployeeDto Employee { get; set; }
-        public DeskDto Desk { get; set; }
+        public BookingDeskDto Desk { get; set; }
     }
 }

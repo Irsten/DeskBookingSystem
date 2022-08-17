@@ -1,4 +1,4 @@
-﻿using DeskBookingSystem.Entities;
+﻿ using DeskBookingSystem.Entities;
 
 namespace DeskBookingSystem.Models
 {
@@ -6,6 +6,7 @@ namespace DeskBookingSystem.Models
     {
         public int Id { get; set; }
         public int DeskNumber { get; set; }
-        public State State { get; set; }
+        public State? State { get; set; }
+        public BookingDto? Booking { get; set; }
     }
 }

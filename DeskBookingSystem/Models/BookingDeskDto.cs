@@ -2,10 +2,10 @@
 
 namespace DeskBookingSystem.Models
 {
-    public class EmployeeDto
+    public class BookingDeskDto
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public Role? Role { get; set; }
+        public int DeskNumber { get; set; }
+        public State? State { get; set; }
     }
 }

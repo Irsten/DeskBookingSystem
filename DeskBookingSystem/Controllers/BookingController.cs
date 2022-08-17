@@ -1,54 +1,54 @@
-﻿using AutoMapper;
-using DeskBookingSystem.Entities;
-using DeskBookingSystem.Models;
+﻿using DeskBookingSystem.Models;
+using DeskBookingSystem.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DeskBookingSystem.Controllers
 {
-    [Route("api/bookings")]
+    [Route("api/booking")]
     public class BookingController : ControllerBase
     {
-        private readonly DeskBookingDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IBookingService _bookingService;
 
-        public BookingController(DeskBookingDbContext dbContext, IMapper mapper)
+        public BookingController(IBookingService bookingService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _bookingService = bookingService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<BookingDto>> GetAll()
         {
-            var bookings = _dbContext
-                .Bookings
-                .Include(b => b.Desk)
-                .Include(b => b.Employee)
-                .ToList();
+            var bookings = _bookingService.GetAll();
 
-            var bookingsDto = _mapper.Map<List<BookingDto>>(bookings);
-
-            return Ok(bookingsDto);
+            return Ok(bookings);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<BookingDto> Get([FromRoute] int id)
+        public ActionResult<BookingDto> GetById([FromRoute] int id)
         {
-            var booking = _dbContext
-                .Bookings
-                .Include(b => b.Desk)
-                .Include(b => b.Employee)
-                .FirstOrDefault(r => r.Id == id); ;
-
+            var booking = _bookingService.GetById(id);
             if (booking is null)
             {
                 return NotFound();
             }
 
-            var bookingDto = _mapper.Map<BookingDto>(booking);
+            return Ok(booking);
+        }
 
-            return Ok(bookingDto);
+        [HttpPost]
+        public ActionResult Create([FromBody] CreateBookingDto dto)
+        {
+            var isCreated = _bookingService.Create(dto);
+            if (!isCreated) return NotFound();
+
+            return Ok();
+        }
+        [HttpPut("{employeeId}/{deskId}")]
+        public ActionResult Change([FromRoute] int employeeId, [FromRoute] int deskId, [FromBody] CreateBookingDto dto)
+        {
+            var isChanged = _bookingService.Change(employeeId, deskId, dto);
+            if (!isChanged) return NotFound();
+
+            return Ok();
         }
     }
 }

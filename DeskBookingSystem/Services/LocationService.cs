@@ -21,7 +21,7 @@ namespace DeskBookingSystem.Services
             var location = _dbContext
                 .Locations
                 .Include(l => l.Desks)
-                .FirstOrDefault(r => r.Id == locationId);
+                .FirstOrDefault(l => l.Id == locationId);
 
             if (location == null) return null;
 
