@@ -42,10 +42,10 @@ namespace DeskBookingSystem.Controllers
 
             return Ok();
         }
-        [HttpPut("{employeeId}/{deskId}")]
-        public ActionResult Change([FromRoute] int employeeId, [FromRoute] int deskId, [FromBody] CreateBookingDto dto)
+        [HttpPut("{employeeId}/{currentDeskId}")]
+        public ActionResult Change([FromRoute] int employeeId, [FromRoute] int currentDeskId, [FromBody] CreateBookingDto dto)
         {
-            var isChanged = _bookingService.Change(employeeId, deskId, dto);
+            var isChanged = _bookingService.Change(employeeId, currentDeskId, dto);
             if (!isChanged) return NotFound();
 
             return Ok();

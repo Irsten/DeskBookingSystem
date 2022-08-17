@@ -70,27 +70,34 @@ namespace DeskBookingSystem.Services
 
             return true;
         }
-        public bool Change(int employeeId, int deskId, CreateBookingDto dto)
+        public bool Change(int employeeId, int currentDeskId, CreateBookingDto dto)
         {
-            var currentDesk = _dbContext
-                .Desks
-                .FirstOrDefault(d => d.Id == deskId);
+            var employee = _dbContext
+                .Employees
+                .Include(e => e.Booking)
+                .FirstOrDefault(e => e.Id == employeeId);
 
             var currentBooking = _dbContext
                 .Bookings
-                .FirstOrDefault(b => b.Employee.Id == employeeId);
+                .Include(d => d.Employee)
+                .FirstOrDefault(b => b.DeskId == currentDeskId);
+
+            var currentDesk = _dbContext
+                .Desks
+                .FirstOrDefault(d => d.Id == currentDeskId);
 
             var newDesk = _dbContext
                 .Desks
                 .FirstOrDefault(d => d.Id == dto.DeskId);
 
             int days;
+            double hours = (dto.BookingStartDate - DateTime.Now).TotalHours;
             if (currentDesk == null) return false;
             if (currentBooking == null) return false;
-            if (currentBooking.Id != currentDesk.Booking.Id) return false;
-            if ((dto.BookingStartDate - DateTime.Now).Hours < 24) return false;
+            if (employee.Id == currentBooking.Employee.Id) return false;
+            if (hours < 24) return false;
             if (newDesk.State.Equals(State.Unavailable)) return false;
-            if (dto.BookingEndDate > dto.BookingStartDate) return false;
+            if (dto.BookingEndDate < dto.BookingStartDate) return false;
             if (dto.BookingEndDate == null)
             {
                 days = 1;
@@ -105,6 +112,7 @@ namespace DeskBookingSystem.Services
             _dbContext.Bookings.Add(booking);
             _dbContext.Bookings.Remove(currentBooking);
             currentDesk.State = State.Available;
+            newDesk.State = State.Unavailable;
             _dbContext.SaveChanges();
 
             return true;
